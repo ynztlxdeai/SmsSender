@@ -2,8 +2,12 @@ package com.vincent.luoxiang.smsmanager;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Telephony;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -34,7 +38,9 @@ public class MainActivity
     private EditText mStart;
     private EditText mTime;
     private View mLl;
+    private String mDefaultSmsApp;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,8 +75,12 @@ public class MainActivity
     /**
      * 初始化数据
      */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void initData() {
-
+        mDefaultSmsApp = Telephony.Sms.getDefaultSmsPackage(this);
+        Intent intent        = new Intent( "android.provider.Telephony.ACTION_CHANGE_DEFAULT");
+        intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, this.getPackageName());
+        startActivity(intent);
     }
 
     /**
@@ -140,7 +150,8 @@ public class MainActivity
 
         values.put("body", content);
 
-        resolver.insert(uri, values);
+        Uri uri1 = resolver.insert(uri, values);
+        System.out.println(uri1.toString());
     }
 
     @Override
