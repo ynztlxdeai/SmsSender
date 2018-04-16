@@ -174,4 +174,12 @@ public class MainActivity
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onStop() {
+        Intent intent        = new Intent( "android.provider.Telephony.ACTION_CHANGE_DEFAULT");
+        intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, mDefaultSmsApp);
+        startActivity(intent);
+        super.onStop();
+    }
 }
